@@ -1,48 +1,92 @@
-from airflow import DAG
+# from airflow import DAG
+# from datetime import datetime
+#
+# from airflow.configuration import conf
+#
+# from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
+#
+# # Constants
+# KUBE_CONFIG = '/usr/local/airflow/dags/kube_config.yaml'
+# KUBE_SERVICE_ACCOUNT = 'mwaa-sa'
+#
+# # DAG
+# default_args = {
+#     'owner': 'airflow',
+#     'depends_on_past': False,
+#     'start_date': datetime(2021, 1, 1),
+#     'provide_context': True
+# }
+#
+# namespace = conf.get("kubernetes", "NAMESPACE")
+# # This will detect the default namespace locally and read the
+# # environment namespace when deployed to Astronomer.
+# if namespace == "default":
+#     config_file = "/usr/local/airflow/include/.kube/config"
+#     in_cluster = False
+# else:
+#     in_cluster = True
+#     config_file = None
+#
+# dag = DAG('dbt_example', default_args=default_args, schedule_interval=None)
+#
+# # Task
+# dbt_test = KubernetesPodOperator(
+#     task_id="dbt-test",
+#     name="dbt-test",
+#     namespace=namespace,
+#     image="my-dbt-image:1.0",
+#     cmds=["dbt"],
+#     arguments=["run", "--profiles-dir", ".", "--fail-fast", "-m", "your_model"],
+#     get_logs=True,
+#     dag=dag,
+#     is_delete_operator_pod=False,
+#     config_file=KUBE_CONFIG,
+#     in_cluster=False,
+#     # service_account_name=KUBE_SERVICE_ACCOUNT,
+# )
+
+from __future__ import annotations
+
 from datetime import datetime
 
-from airflow.configuration import conf
+from airflow import DAG
+from airflow.decorators import task
 
-# from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+with DAG(
+    dag_id="example_kubernetes_decorator",
+    schedule=None,
+    start_date=datetime(2021, 1, 1),
+    tags=["example", "cncf", "kubernetes"],
+    catchup=False,
+) as dag:
+    # [START howto_operator_kubernetes]
+    @task.kubernetes(
+        image="python:3.8-slim-buster",
+        name="k8s_test",
+        namespace="default",
+        in_cluster=False,
+        config_file="/path/to/.kube/config",
+    )
+    def execute_in_k8s_pod():
+        import time
 
-# Constants
-KUBE_CONFIG = '/usr/local/airflow/dags/kube_config.yaml'
-KUBE_SERVICE_ACCOUNT = 'mwaa-sa'
+        print("Hello from k8s pod")
+        time.sleep(2)
 
-# DAG
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'start_date': datetime(2021, 1, 1),
-    'provide_context': True
-}
+    @task.kubernetes(image="python:3.8-slim-buster", namespace="default", in_cluster=False)
+    def print_pattern():
+        n = 5
+        for i in range(n):
+            # inner loop to handle number of columns
+            # values changing acc. to outer loop
+            for j in range(i + 1):
+                # printing stars
+                print("* ", end="")
 
-namespace = conf.get("kubernetes", "NAMESPACE")
-# This will detect the default namespace locally and read the
-# environment namespace when deployed to Astronomer.
-if namespace == "default":
-    config_file = "/usr/local/airflow/include/.kube/config"
-    in_cluster = False
-else:
-    in_cluster = True
-    config_file = None
+            # ending line after each row
+            print("\r")
 
-dag = DAG('dbt_example', default_args=default_args, schedule_interval=None)
+    execute_in_k8s_pod_instance = execute_in_k8s_pod()
+    print_pattern_instance = print_pattern()
 
-# Task
-# dbt_test = KubernetesPodOperator(
-#                        task_id="dbt-test",
-#                        name="dbt-test",
-#                        namespace=namespace,
-#                        image="my-dbt-image:1.0",
-#                        cmds=["dbt"],
-#                        arguments=["run", "--profiles-dir", ".", "--fail-fast", "-m", "your_model"],
-#                        ## no change on below
-#                        get_logs=True,
-#                        dag=dag,
-#                        is_delete_operator_pod=False,
-#                        config_file=KUBE_CONFIG,
-#                        in_cluster=False,
-#                        service_account_name=KUBE_SERVICE_ACCOUNT,
-#                        get_logs=True,
-#                        )
+    execute_in_k8s_pod_instance >> print_pattern_instance
