@@ -1,6 +1,9 @@
 from airflow import DAG
 from datetime import datetime
-from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+
+from airflow.configuration import conf
+
+# from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 
 # Constants
 KUBE_CONFIG = '/usr/local/airflow/dags/kube_config.yaml'
@@ -8,10 +11,10 @@ KUBE_SERVICE_ACCOUNT = 'mwaa-sa'
 
 # DAG
 default_args = {
-   'owner': 'airflow',
-   'depends_on_past': False,
-   'start_date': datetime(2021, 1, 1),
-   'provide_context': True
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2021, 1, 1),
+    'provide_context': True
 }
 
 namespace = conf.get("kubernetes", "NAMESPACE")
@@ -24,8 +27,7 @@ else:
     in_cluster = True
     config_file = None
 
-
-dag = DAG('dbt_example',default_args=default_args, schedule_interval=None)
+dag = DAG('dbt_example', default_args=default_args, schedule_interval=None)
 
 # Task
 # dbt_test = KubernetesPodOperator(

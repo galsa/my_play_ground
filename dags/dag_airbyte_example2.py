@@ -7,12 +7,12 @@ from airflow.models import Variable
 from airflow.providers.airbyte.operators.airbyte import AirbyteTriggerSyncOperator
 from airflow.utils.dates import days_ago
 
-airbyte_connection_id = '1d7b8c28-8e09-4ae4-9955-a4a388701f32' #Variable.get("AIRBYTE_CONNECTION_ID")
+airbyte_connection_id = '14032a1e1-c8ad-4fbf-a6ef-92d7e9a5931f'  # Variable.get("AIRBYTE_CONNECTION_ID")
 
 with DAG(
-    dag_id="trigger_airbyte_job_example", default_args={"owner": "airflow"}, schedule_interval="@daily", start_date=days_ago(1)
+        dag_id="trigger_airbyte_job_example2", default_args={"owner": "airflow"}, schedule_interval="@daily",
+        start_date=days_ago(1)
 ) as dag:
-
     example_sync = AirbyteTriggerSyncOperator(
         task_id="airbyte_example",
         airbyte_conn_id="airbyte_example",
