@@ -20,4 +20,4 @@ k2 = KubernetesPodOperator(
     email_on_failure=True,
 )
 
-k.dry_run() >> k2
+k.dry_run() >> k2.dry_run()
