@@ -5,10 +5,18 @@ This is an example dag for using the KubernetesPodOperator.
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 from airflow.utils.dates import days_ago
+from airflow.configuration import conf
 
 default_args = {
     'owner': 'airflow'
 }
+
+namespace = conf.get("kubernetes", "NAMESPACE")
+if namespace == "default":
+    in_cluster = False
+else:
+    in_cluster = True
+
 
 with DAG(
         dag_id='k8s-example-0',
@@ -19,7 +27,7 @@ with DAG(
         tags=['k8s-pod-operator', 'example'],
 ) as dag:
     k = KubernetesPodOperator(
-        namespace='default',
+        namespace= namespace,
         image="ubuntu:latest",
         cmds=["bash", "-cx"],
         arguments=["echo hello"],
