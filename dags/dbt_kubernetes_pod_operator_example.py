@@ -8,7 +8,7 @@ from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperato
 # Constants
 KUBE_CONFIG = '/usr/local/airflow/dags/kube_config.yaml'
 
-# DAG
+
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
@@ -33,20 +33,6 @@ with DAG(
         start_date=days_ago(1),
 ) as dag:
     # Task
-    # dbt_test = KubernetesPodOperator(
-    #     task_id="dbt-test",
-    #     name="dbt-test",
-    #     namespace=namespace,
-    #     image="my-dbt-image:1.0",
-    #     cmds=["dbt"],
-    #     arguments=["run", "--profiles-dir", "profiles"],
-    #     get_logs=True,
-    #     dag=dag,
-    #     is_delete_operator_pod=False,
-    #     config_file=config_file,
-    #     in_cluster=in_cluster,
-    # )
-
     migrate_data = KubernetesPodOperator(
         namespace='default',
         image='kubernetesetlcontainerregistry.azurecr.io/my-dbt-image:1.0',
