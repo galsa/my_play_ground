@@ -3,7 +3,7 @@ from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperato
 from airflow.utils.dates import days_ago
 
 with DAG(
-        dag_id="kpo_mapped",
+        dag_id="print_out_kubernetes_manifest",
         default_args={"owner": "airflow"},
         schedule_interval="@daily",
         start_date=days_ago(1),
