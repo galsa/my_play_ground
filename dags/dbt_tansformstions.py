@@ -46,10 +46,10 @@ def run_dbt_transformations():
     dagrun_timeout=duration(minutes=10),
     catchup=False,
 )
-def dbt_kubernetes_pod_operator_example():
+def dbt_transformation_example():
     task_logger.warning("before call to run_dbt_transformations()")
     run_dbt_transformations()
     task_logger.warning("after call to run_dbt_transformations()")
 
 
-dag = dbt_kubernetes_pod_operator_example()
+dag = dbt_transformation_example()
