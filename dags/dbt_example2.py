@@ -49,7 +49,7 @@ migrate_data = KubernetesPodOperator(
         image='kubernetesetlcontainerregistry.azurecr.io/my-dbt-image:1.0',
         cmds=["dbt", "run"],
         arguments=[
-            "--project-dir", "./<project_dir>", "--profiles-dir", "./<project_dir>/profiles"
+            "--profiles-dir", "profiles"
         ],
         name="dbt_transformations",
         task_id="dbt_transformations",
