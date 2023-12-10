@@ -7,7 +7,7 @@ from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperato
 
 # Constants
 KUBE_CONFIG = '/usr/local/airflow/dags/kube_config.yaml'
-KUBE_SERVICE_ACCOUNT = 'mwaa-sa'
+
 
 # DAG
 default_args = {
@@ -55,4 +55,6 @@ migrate_data = KubernetesPodOperator(
         task_id="dbt_transformations",
         get_logs=True
     )
+
+migrate_data.run()
 
