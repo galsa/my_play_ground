@@ -17,7 +17,6 @@ if namespace == "default":
 else:
     in_cluster = True
 
-
 with DAG(
         dag_id='k8s-example-0',
         default_args=default_args,
@@ -27,7 +26,7 @@ with DAG(
         tags=['k8s-pod-operator', 'example'],
 ) as dag:
     k = KubernetesPodOperator(
-        namespace= namespace,
+        namespace=namespace,
         image="ubuntu:latest",
         cmds=["bash", "-cx"],
         arguments=["echo hello"],
