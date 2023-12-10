@@ -27,7 +27,8 @@ with DAG(
         namespace=namespace,
         config_file=config_file,
         in_cluster=False,
-        image="docker.io/rancher/cowsay",
-        cmds=["cowsay"],
+        image="docker.io/rancher/cowsay:latest",
+        cmds=["/usr/games/cowsay"],
         arguments=["moo"],
     )
+
