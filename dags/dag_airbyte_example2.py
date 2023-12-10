@@ -10,7 +10,9 @@ from airflow.utils.dates import days_ago
 airbyte_connection_id = '14032a1e1-c8ad-4fbf-a6ef-92d7e9a5931f'  # Variable.get("AIRBYTE_CONNECTION_ID")
 
 with DAG(
-        dag_id="trigger_airbyte_job_example2", default_args={"owner": "airflow"}, schedule_interval="@daily",
+        dag_id="trigger_airbyte_job_example2",
+        default_args={"owner": "airflow"},
+        schedule_interval="@daily",
         start_date=days_ago(1)
 ) as dag:
     example_sync = AirbyteTriggerSyncOperator(

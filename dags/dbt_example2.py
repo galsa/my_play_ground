@@ -1,5 +1,5 @@
 from airflow import DAG
-from datetime import datetime
+from airflow.utils.dates import days_ago
 
 from airflow.configuration import conf
 
@@ -13,7 +13,7 @@ KUBE_CONFIG = '/usr/local/airflow/dags/kube_config.yaml'
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2021, 1, 1),
+    'start_date': days_ago(1),
     'provide_context': True
 }
 

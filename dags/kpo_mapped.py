@@ -3,6 +3,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.configuration import conf
 from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
+from airflow.utils.dates import days_ago
 
 namespace = conf.get("kubernetes", "NAMESPACE")
 # This will detect the default namespace locally and read the
@@ -16,8 +17,9 @@ else:
 
 with DAG(
         dag_id="kpo_mapped",
-        start_date=datetime(1970, 1, 1),
-        schedule_interval=None,
+        default_args={"owner": "airflow"},
+        schedule_interval="@daily",
+        start_date=days_ago(1)
 ) as dag:
     KubernetesPodOperator(
         task_id="moo",
