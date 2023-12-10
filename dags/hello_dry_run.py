@@ -19,7 +19,7 @@ with DAG(
         tags=['k8s-pod-operator', 'example'],
 ) as dag:
     k = KubernetesPodOperator(
-        namespace='airflow',
+        namespace='default',
         image="ubuntu:latest",
         cmds=["bash", "-cx"],
         arguments=["echo hello"],
