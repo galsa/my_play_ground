@@ -22,7 +22,6 @@ from pendulum import datetime
 from airflow.configuration import conf
 from airflow.decorators import dag, task
 import random
-# import the logging module
 import logging
 
 # get the current Kubernetes namespace Airflow is running in
@@ -31,6 +30,7 @@ image = 'kubernetesetlcontainerregistry.azurecr.io/jaffe-shop-duckdb:1.0'
 
 # get the airflow.task logger
 task_logger = logging.getLogger("airflow.task")
+
 
 @dag(
     start_date=datetime(2023, 1, 1),
@@ -68,16 +68,12 @@ def kubernetes_decorator_example_dag():
         return multiplied_data_point
 
     @task
-    def load_data(**context):
-        task_logger.warning("entering: load_data(**context)")
-        # pull the XCom value that has been pushed by the KubernetesPodOperator
-        transformed_data_point = context["ti"].xcom_pull(
-            task_ids="transform", key="return_value"
-        )
+    def load_data(transformed_data_point: int):
+        task_logger.warning("entering: load_data(transformed_data_point)")
         print(transformed_data_point)
-        task_logger.warning("transformed_data_point: " + transformed_data_point)
+        task_logger.warning("transformed_data_point: " + str(transformed_data_point))
 
-    load_data(transform(extract_data()))
+    extract_data() >> transform() >> load_data()
 
 
-kubernetes_decorator_example_dag()
+kubernetes_decorator_example_dag = kubernetes_decorator_example_dag()
