@@ -36,7 +36,7 @@ def task_dbt_transformation():
         namespace=namespace,
         image=image,
         cmds=["/bin/bash", "-c"],  # use bash to run multiple commands
-        arguments=["dbt deps && dbt build --profiles-dir ."],
+        arguments=["dbt deps && dbt build --profiles-dir . && sleep infinity"],
         name="dbt_transformations",
         task_id="dbt_transformations",
         get_logs=True,
