@@ -40,7 +40,7 @@ def task_dbt_transformation():
         arguments=["dbt deps && dbt build --profiles-dir ."],
         name="dbt_transformations",
         task_id="dbt_transformations",
-        get_logs=True,
+        get_logs=False,
         log_events_on_failure=True,
         # config_file=config_file,
         in_cluster=in_cluster,
