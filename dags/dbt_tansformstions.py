@@ -9,6 +9,9 @@ import logging
 # get the airflow.task logger
 task_logger = logging.getLogger("airflow.task")
 
+# image = 'kubernetesetlcontainerregistry.azurecr.io/my-dbt-image:1.0'
+image = 'kubernetesetlcontainerregistry.azurecr.io/jaffe-shop-duckdb:1.0'
+
 # Constants
 KUBE_CONFIG = '/usr/local/airflow/dags/kube_config.yaml'
 
@@ -25,9 +28,10 @@ else:
 
 @task
 def run_dbt_transformations():
+    task_logger.warning("using image: " + image)
     KubernetesPodOperator(
         namespace='default',
-        image='kubernetesetlcontainerregistry.azurecr.io/my-dbt-image:1.0',
+        image=image,
         cmds=["dbt", "run"],
         arguments=[
             "--profiles-dir", "profiles"
@@ -35,8 +39,9 @@ def run_dbt_transformations():
         name="dbt_transformations",
         task_id="dbt_transformations",
         get_logs=True,
+        log_events_on_failure=True,
         config_file=config_file,
-        in_cluster=in_cluster
+        in_cluster=in_cluster,
     )
 
 
