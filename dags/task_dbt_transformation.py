@@ -36,13 +36,15 @@ def task_dbt_transformation():
         namespace=namespace,
         image=image,
         cmds=["/bin/bash", "-c"],  # use bash to run multiple commands
-        arguments=["dbt deps && dbt build --profiles-dir . && sleep infinity"],
+        # arguments=["dbt deps && dbt build --profiles-dir . && sleep infinity"],
+        arguments=["dbt deps && dbt build --profiles-dir ."],
         name="dbt_transformations",
         task_id="dbt_transformations",
         get_logs=True,
         log_events_on_failure=True,
         # config_file=config_file,
         in_cluster=in_cluster,
+        is_delete_operator_pod=False,  # don't delete the pod after task completion (only for testing)
     )
 
     @task
