@@ -31,7 +31,7 @@ task_logger = logging.getLogger("airflow.task")
     catchup=False,
     schedule="@daily",
 )
-def kubernetes_decorator_example_dag():
+def task_dbt_transformation():
     dbt_task = KubernetesPodOperator(
         namespace=namespace,
         image=image,
@@ -52,4 +52,4 @@ def kubernetes_decorator_example_dag():
     dbt_task >> print_success_message()
 
 
-kubernetes_decorator_example_dag = kubernetes_decorator_example_dag()
+kubernetes_decorator_example_dag = task_dbt_transformation()
