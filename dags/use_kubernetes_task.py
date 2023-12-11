@@ -41,30 +41,21 @@ def kubernetes_decorator_example_dag():
     @task
     def extract_data():
         task_logger.warning("entering: extract_data()")
-        # simulating querying from a database
         data_point = random.randint(0, 100)
         return data_point
 
     @task.kubernetes(
-        # specify the Docker image to launch, it needs to be able to run a Python script
         image=image,
-        # launch the Pod on the same cluster as Airflow is running on
         in_cluster=True,
-        # launch the Pod in the same namespace as Airflow is running in
         namespace=namespace,
-        # Pod configuration
-        # naming the Pod
         name="my_pod",
-        # log stdout of the container as task logs
         get_logs=True,
-        # log events in case of Pod failure
         log_events_on_failure=True,
-        # enable pushing to XCom
         do_xcom_push=True,
     )
-    def transform(data_point):
+    def transform(data_point: int):
         task_logger.warning("entering: transform(data_point)")
-        multiplied_data_point = 23 * int(data_point)
+        multiplied_data_point = 23 * data_point
         return multiplied_data_point
 
     @task
@@ -73,7 +64,10 @@ def kubernetes_decorator_example_dag():
         print(transformed_data_point)
         task_logger.warning("transformed_data_point: " + str(transformed_data_point))
 
-    extract_data() >> transform() >> load_data()
+    data_point = extract_data()
+    transformed_data = transform(data_point)
+    load_data(transformed_data)
 
 
 kubernetes_decorator_example_dag = kubernetes_decorator_example_dag()
+
