@@ -37,10 +37,10 @@ def my_combined_airbyte_dbt_tasks():
         arguments=["dbt deps && dbt build --profiles-dir ."],
         name="dbt_transformations",
         task_id="run_dbt_transformations",
-        get_logs=True,
+        get_logs=False,
         log_events_on_failure=True,
         in_cluster=in_cluster,
-        is_delete_operator_pod=True,  # don't delete the pod after task completion (only for testing)
+        is_delete_operator_pod=False,  # don't delete the pod after task completion (only for testing)
     )
 
     @task
