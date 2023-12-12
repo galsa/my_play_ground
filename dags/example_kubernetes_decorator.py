@@ -26,7 +26,7 @@ with DAG(
         time.sleep(2)
 
 
-    @task.kubernetes(image="python:3.8-slim-buster", namespace="default", in_cluster=False)
+    @task.kubernetes(image="python:3.8-slim-buster", namespace="default", in_cluster=True)
     def print_pattern():
         n = 5
         for i in range(n):
