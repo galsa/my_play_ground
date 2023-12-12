@@ -18,6 +18,9 @@ with DAG(
         name="k8s_test",
         namespace="default",
         in_cluster=True,
+        get_logs=False,
+        log_events_on_failure=True,
+        is_delete_operator_pod=False,
     )
     def execute_in_k8s_pod():
         import time
@@ -26,7 +29,14 @@ with DAG(
         time.sleep(2)
 
 
-    @task.kubernetes(image="python:3.8-slim-buster", namespace="default", in_cluster=True)
+    @task.kubernetes(
+        image="python:3.8-slim-buster",
+        namespace="default",
+        in_cluster=True,
+        get_logs=False,
+        log_events_on_failure=True,
+        is_delete_operator_pod=False,
+    )
     def print_pattern():
         n = 5
         for i in range(n):
