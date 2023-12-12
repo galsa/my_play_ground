@@ -7,7 +7,8 @@ import logging
 # Kubernetes parameters
 namespace = 'default'
 image = 'kubernetesetlcontainerregistry.azurecr.io/jaffe-shop-duckdb:1.0'
-airbyte_connection_id = '55ac2529-7881-4059-b82b-203a30d408cc'  # Variable.get("AIRBYTE_CONNECTION_ID")
+connection_id = '5872a75d-68ef-4009-9b5c-047f118d2185'  # Variable.get("AIRBYTE_CONNECTION_ID")
+airbyte_connection_id = 'airflow-call-to-airbyte-example'
 in_cluster = True
 
 # get the airflow.task logger
@@ -21,9 +22,9 @@ task_logger = logging.getLogger("airflow.task")
 )
 def my_combined_airbyte_dbt_tasks():
     run_airbyte_job = AirbyteTriggerSyncOperator(
-        task_id="run_airbyte_job",
-        airbyte_conn_id="airbyte_default",
-        connection_id=airbyte_connection_id,
+        task_id="run_combined_airbyte_dbt_job",
+        airbyte_conn_id=airbyte_connection_id,
+        connection_id=connection_id,
         asynchronous=False,
         timeout=3600,
         wait_seconds=3,
